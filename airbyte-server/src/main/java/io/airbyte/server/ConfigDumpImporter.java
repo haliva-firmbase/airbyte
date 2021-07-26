@@ -206,7 +206,7 @@ public class ConfigDumpImporter {
     } else {
       seed = new HashMap<>();
     }
-    for (String directory : directories) {
+    for (final String directory : directories) {
       final Optional<ConfigSchema> configSchemaOptional = Enums.toEnum(directory.replace(".yaml", ""), ConfigSchema.class);
 
       if (configSchemaOptional.isEmpty()) {
