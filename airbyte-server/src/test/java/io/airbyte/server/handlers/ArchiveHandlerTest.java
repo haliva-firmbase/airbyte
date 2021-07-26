@@ -100,7 +100,6 @@ public class ArchiveHandlerTest {
     assertFalse(Files.exists(file.toPath()));
 
     verify(trackingClient).identify();
-    verify(trackingClient).alias(customerId.toString());
     verify(configDumpImporter).importData(VERSION, file);
   }
 

@@ -98,7 +98,8 @@ public class ArchiveHandler {
 
   /**
    * Extract internal Airbyte data from the @param archive tarball file (using Gzip compression) as
-   * produced by {@link #exportData(WorkspaceIdRequestBody)}. Note that the provided archived file will be deleted.
+   * produced by {@link #exportData(WorkspaceIdRequestBody)}. Note that the provided archived file
+   * will be deleted.
    *
    * @return a status object describing if import was successful or not.
    */
@@ -120,11 +121,6 @@ public class ArchiveHandler {
       LOGGER.error("Import failed", e);
       result = new ImportRead().status(StatusEnum.FAILED).reason(e.getMessage());
     }
-
-    // identify this instance as the new customer id.
-    trackingClient.identify();
-    // report that the previous customer id is now superseded by the imported one.
-    previousCustomerIdOptional.ifPresent(previousCustomerId -> trackingClient.alias(previousCustomerId.toString()));
 
     return result;
   }

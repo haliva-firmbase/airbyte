@@ -170,6 +170,7 @@ public class AcceptanceTests {
 
   private AirbyteApiClient apiClient;
 
+  private UUID workspaceId;
   private List<UUID> sourceIds;
   private List<UUID> connectionIds;
   private List<UUID> destinationIds;
@@ -218,6 +219,9 @@ public class AcceptanceTests {
             .setHost("localhost")
             .setPort(8001)
             .setBasePath("/api"));
+
+    // work in whatever default workspace is present.
+    workspaceId = apiClient.getWorkspaceApi().listWorkspaces().getWorkspaces().get(0).getWorkspaceId();
 
     // log which connectors are being used.
     final SourceDefinitionRead sourceDef = apiClient.getSourceDefinitionApi()
@@ -293,7 +297,6 @@ public class AcceptanceTests {
   public void testCreateDestination() throws ApiException {
     final UUID destinationDefId = getDestinationDefId();
     final JsonNode destinationConfig = getDestinationDbConfig();
-    final UUID workspaceId = PersistenceConstants.DEFAULT_WORKSPACE_ID;
     final String name = "AccTestDestinationDb-" + UUID.randomUUID();
 
     final DestinationRead createdDestination = createDestination(
@@ -329,12 +332,11 @@ public class AcceptanceTests {
   public void testCreateSource() throws ApiException {
     final String dbName = "acc-test-db";
     final UUID postgresSourceDefinitionId = getPostgresSourceDefinitionId();
-    final UUID defaultWorkspaceId = PersistenceConstants.DEFAULT_WORKSPACE_ID;
     final JsonNode sourceDbConfig = getSourceDbConfig();
 
     final SourceRead response = createSource(
         dbName,
-        defaultWorkspaceId,
+        workspaceId,
         postgresSourceDefinitionId,
         sourceDbConfig);
 
@@ -342,7 +344,7 @@ public class AcceptanceTests {
     // expect replacement of secret with magic string.
     ((ObjectNode) expectedConfig).put("password", "**********");
     assertEquals(dbName, response.getName());
-    assertEquals(defaultWorkspaceId, response.getWorkspaceId());
+    assertEquals(workspaceId, response.getWorkspaceId());
     assertEquals(postgresSourceDefinitionId, response.getSourceDefinitionId());
     assertEquals(expectedConfig, response.getConnectionConfiguration());
   }
@@ -654,7 +656,7 @@ public class AcceptanceTests {
 
     final SourceRead source = createSource(
         "E2E Test Source -" + UUID.randomUUID(),
-        PersistenceConstants.DEFAULT_WORKSPACE_ID,
+        workspaceId,
         sourceDefinition.getSourceDefinitionId(),
         Jsons.jsonNode(ImmutableMap.builder()
             .put("type", "EXCEPTION_AFTER_N")
@@ -663,7 +665,7 @@ public class AcceptanceTests {
 
     final DestinationRead destination = createDestination(
         "E2E Test Destination -" + UUID.randomUUID(),
-        PersistenceConstants.DEFAULT_WORKSPACE_ID,
+        workspaceId,
         destinationDefinition.getDestinationDefinitionId(),
         Jsons.jsonNode(ImmutableMap.of("type", "LOGGING")));
 
@@ -755,7 +757,7 @@ public class AcceptanceTests {
 
     final SourceRead source = createSource(
         "E2E Test Source -" + UUID.randomUUID(),
-        PersistenceConstants.DEFAULT_WORKSPACE_ID,
+        workspaceId,
         sourceDefinition.getSourceDefinitionId(),
         Jsons.jsonNode(ImmutableMap.builder()
             .put("type", "INFINITE_FEED")
@@ -764,7 +766,7 @@ public class AcceptanceTests {
 
     final DestinationRead destination = createDestination(
         "E2E Test Destination -" + UUID.randomUUID(),
-        PersistenceConstants.DEFAULT_WORKSPACE_ID,
+        workspaceId,
         destinationDefinition.getDestinationDefinitionId(),
         Jsons.jsonNode(ImmutableMap.builder()
             .put("type", "THROTTLED")
@@ -920,7 +922,7 @@ public class AcceptanceTests {
   private DestinationRead createDestination() throws ApiException {
     return createDestination(
         "AccTestDestination-" + UUID.randomUUID(),
-        PersistenceConstants.DEFAULT_WORKSPACE_ID,
+        workspaceId,
         getDestinationDefId(),
         getDestinationDbConfig());
   }
@@ -942,7 +944,7 @@ public class AcceptanceTests {
             OptionEnum.BASIC));
 
     final OperationCreate operationCreate = new OperationCreate()
-        .workspaceId(PersistenceConstants.DEFAULT_WORKSPACE_ID)
+        .workspaceId(workspaceId)
         .name("AccTestDestination-" + UUID.randomUUID()).operatorConfiguration(normalizationConfig);
 
     OperationRead operation = apiClient.getOperationApi().createOperation(operationCreate);
@@ -1045,7 +1047,7 @@ public class AcceptanceTests {
   private SourceRead createPostgresSource() throws ApiException {
     return createSource(
         "acceptanceTestDb-" + UUID.randomUUID(),
-        PersistenceConstants.DEFAULT_WORKSPACE_ID,
+        workspaceId,
         getPostgresSourceDefinitionId(),
         getSourceDbConfig());
   }
