@@ -29,7 +29,6 @@ import io.airbyte.analytics.TrackingClient;
 import io.airbyte.analytics.TrackingClientSingleton;
 import io.airbyte.api.model.ImportRead;
 import io.airbyte.api.model.ImportRead.StatusEnum;
-import io.airbyte.api.model.WorkspaceIdRequestBody;
 import io.airbyte.commons.io.FileTtlManager;
 import io.airbyte.config.persistence.ConfigRepository;
 import io.airbyte.config.persistence.PersistenceConstants;
@@ -89,8 +88,7 @@ public class ArchiveHandler {
    *
    * @return that tarball File.
    */
-  public File exportData(WorkspaceIdRequestBody workspaceIdRequestBody) {
-    final UUID workspaceId = workspaceIdRequestBody.getWorkspaceId();
+  public File exportData() {
     final File archive = configDumpExporter.dump();
     fileTtlManager.register(archive.toPath());
     return archive;
@@ -98,8 +96,7 @@ public class ArchiveHandler {
 
   /**
    * Extract internal Airbyte data from the @param archive tarball file (using Gzip compression) as
-   * produced by {@link #exportData(WorkspaceIdRequestBody)}. Note that the provided archived file
-   * will be deleted.
+   * produced by {@link #exportData()}. Note that the provided archived file will be deleted.
    *
    * @return a status object describing if import was successful or not.
    */

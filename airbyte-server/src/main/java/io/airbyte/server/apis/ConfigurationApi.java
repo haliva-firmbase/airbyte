@@ -547,8 +547,8 @@ public class ConfigurationApi implements io.airbyte.api.V1Api {
   // ARCHIVES
 
   @Override
-  public File exportArchive(WorkspaceIdRequestBody workspaceIdRequestBody) {
-    return execute(() -> archiveHandler.exportData(workspaceIdRequestBody));
+  public File exportArchive() {
+    return execute(archiveHandler::exportData);
   }
 
   @Override
