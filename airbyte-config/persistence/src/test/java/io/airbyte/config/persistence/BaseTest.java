@@ -52,7 +52,7 @@ public abstract class BaseTest {
     try {
       ConfigPersistence seedPersistence = new YamlSeedConfigPersistence();
       DEFAULT_WORKSPACE = seedPersistence
-          .getConfig(ConfigSchema.STANDARD_WORKSPACE, PersistenceConstants.DEFAULT_WORKSPACE_ID.toString(), StandardWorkspace.class);
+          .getConfig(ConfigSchema.STANDARD_WORKSPACE, "afee3912-a245-4bd3-9e47-78c120877c47", StandardWorkspace.class);
       SOURCE_GITHUB = seedPersistence
           .getConfig(ConfigSchema.STANDARD_SOURCE_DEFINITION, "ef69ef6e-aa7f-4af1-a01d-ef775033524e", StandardSourceDefinition.class);
       SOURCE_POSTGRES = seedPersistence

@@ -29,15 +29,12 @@ import io.airbyte.api.model.ImportRead;
 import io.airbyte.api.model.ImportRead.StatusEnum;
 import io.airbyte.commons.io.FileTtlManager;
 import io.airbyte.config.persistence.ConfigRepository;
-import io.airbyte.config.persistence.PersistenceConstants;
 import io.airbyte.scheduler.persistence.JobPersistence;
 import io.airbyte.server.ConfigDumpExporter;
 import io.airbyte.server.ConfigDumpImporter;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Optional;
-import java.util.UUID;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,9 +92,6 @@ public class ArchiveHandler {
    * @return a status object describing if import was successful or not.
    */
   public ImportRead importData(File archive) {
-    // customerId before import happens.
-    final Optional<UUID> previousCustomerIdOptional = getCurrentCustomerId();
-
     ImportRead result;
     try {
       final Path tempFolder = Files.createTempDirectory(Path.of("/tmp"), "airbyte_archive");
@@ -114,16 +108,6 @@ public class ArchiveHandler {
     }
 
     return result;
-  }
-
-  private Optional<UUID> getCurrentCustomerId() {
-    try {
-      return Optional.of(configRepository.getStandardWorkspace(PersistenceConstants.DEFAULT_WORKSPACE_ID, true).getCustomerId());
-    } catch (Exception e) {
-      // because this is used for tracking we prefer to log instead of killing the import.
-      LOGGER.error("failed to fetch current customerId.", e);
-      return Optional.empty();
-    }
   }
 
 }

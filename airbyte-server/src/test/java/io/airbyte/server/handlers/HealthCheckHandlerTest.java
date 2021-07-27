@@ -33,12 +33,14 @@ import io.airbyte.api.model.HealthCheckRead;
 import io.airbyte.config.StandardWorkspace;
 import io.airbyte.config.persistence.ConfigNotFoundException;
 import io.airbyte.config.persistence.ConfigRepository;
-import io.airbyte.config.persistence.PersistenceConstants;
 import io.airbyte.validation.json.JsonValidationException;
 import java.io.IOException;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 class HealthCheckHandlerTest {
+
+  private static final UUID WORKSPACE_ID = UUID.randomUUID();
 
   @Test
   void testDbHealth() throws ConfigNotFoundException, IOException, JsonValidationException {
@@ -46,14 +48,14 @@ class HealthCheckHandlerTest {
     final HealthCheckHandler healthCheckHandler = new HealthCheckHandler(configRepository);
 
     // check db healthy
-    when(configRepository.getStandardWorkspace(PersistenceConstants.DEFAULT_WORKSPACE_ID, true)).thenReturn(new StandardWorkspace());
+    when(configRepository.getStandardWorkspace(WORKSPACE_ID, true)).thenReturn(new StandardWorkspace());
     assertEquals(new HealthCheckRead().db(true), healthCheckHandler.health());
 
     // check db unhealthy
-    when(configRepository.getStandardWorkspace(PersistenceConstants.DEFAULT_WORKSPACE_ID, true)).thenReturn(null);
+    when(configRepository.getStandardWorkspace(WORKSPACE_ID, true)).thenReturn(null);
     assertEquals(new HealthCheckRead().db(false), healthCheckHandler.health());
 
-    doThrow(IOException.class).when(configRepository).getStandardWorkspace(PersistenceConstants.DEFAULT_WORKSPACE_ID, false);
+    doThrow(IOException.class).when(configRepository).getStandardWorkspace(WORKSPACE_ID, false);
     assertEquals(new HealthCheckRead().db(false), healthCheckHandler.health());
   }
 

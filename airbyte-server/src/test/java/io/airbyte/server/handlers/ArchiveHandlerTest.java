@@ -33,18 +33,13 @@ import static org.mockito.Mockito.when;
 import io.airbyte.api.model.ImportRead;
 import io.airbyte.api.model.ImportRead.StatusEnum;
 import io.airbyte.commons.io.FileTtlManager;
-import io.airbyte.config.StandardWorkspace;
-import io.airbyte.config.persistence.ConfigNotFoundException;
 import io.airbyte.config.persistence.ConfigRepository;
-import io.airbyte.config.persistence.PersistenceConstants;
 import io.airbyte.server.ConfigDumpExporter;
 import io.airbyte.server.ConfigDumpImporter;
-import io.airbyte.validation.json.JsonValidationException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -84,11 +79,8 @@ public class ArchiveHandlerTest {
   }
 
   @Test
-  void testImport() throws IOException, JsonValidationException, ConfigNotFoundException {
+  void testImport() throws IOException {
     final File file = Files.createTempFile(Path.of("/tmp"), "dump_file", "dump_file").toFile();
-    final UUID customerId = UUID.randomUUID();
-    when(configRepository.getStandardWorkspace(PersistenceConstants.DEFAULT_WORKSPACE_ID, true))
-        .thenReturn(new StandardWorkspace().withCustomerId(customerId));
 
     assertEquals(new ImportRead().status(StatusEnum.SUCCEEDED), archiveHandler.importData(file));
 

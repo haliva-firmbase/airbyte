@@ -43,7 +43,6 @@ import io.airbyte.config.ConfigSchema;
 import io.airbyte.config.DestinationConnection;
 import io.airbyte.config.SourceConnection;
 import io.airbyte.config.persistence.ConfigRepository;
-import io.airbyte.config.persistence.PersistenceConstants;
 import io.airbyte.db.instance.jobs.JobsDatabaseSchema;
 import io.airbyte.scheduler.persistence.DefaultJobPersistence;
 import io.airbyte.scheduler.persistence.JobPersistence;
@@ -93,18 +92,6 @@ public class ConfigDumpImporter {
     this.jsonSchemaValidator = jsonSchemaValidator;
     this.postgresPersistence = postgresPersistence;
     this.configRepository = configRepository;
-  }
-
-  @VisibleForTesting
-  public Optional<UUID> getCurrentCustomerId() {
-    try {
-      return Optional.of(configRepository
-          .getStandardWorkspace(PersistenceConstants.DEFAULT_WORKSPACE_ID, true).getCustomerId());
-    } catch (Exception e) {
-      // because this is used for tracking we prefer to log instead of killing the import.
-      LOGGER.error("failed to fetch current customerId.", e);
-      return Optional.empty();
-    }
   }
 
   public ImportRead importData(String targetVersion, File archive) {

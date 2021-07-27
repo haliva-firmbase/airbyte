@@ -29,7 +29,6 @@ import io.airbyte.config.Configs;
 import io.airbyte.config.StandardWorkspace;
 import io.airbyte.config.persistence.ConfigNotFoundException;
 import io.airbyte.config.persistence.ConfigRepository;
-import io.airbyte.config.persistence.PersistenceConstants;
 import io.airbyte.validation.json.JsonValidationException;
 import java.io.IOException;
 import java.util.UUID;
@@ -89,7 +88,7 @@ public class TrackingClientSingleton {
           workspace.getNews(),
           workspace.getSecurityUpdates());
     } catch (ConfigNotFoundException e) {
-      throw new RuntimeException("could not find workspace with id: " + PersistenceConstants.DEFAULT_WORKSPACE_ID, e);
+      throw new RuntimeException("could not find workspace with id: " + workspaceId, e);
     } catch (JsonValidationException | IOException e) {
       throw new RuntimeException(e);
     }

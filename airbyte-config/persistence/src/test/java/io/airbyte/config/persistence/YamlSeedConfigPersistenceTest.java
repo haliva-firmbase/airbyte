@@ -54,16 +54,6 @@ public class YamlSeedConfigPersistenceTest {
 
   @Test
   public void testGetConfig() throws Exception {
-    // workspace
-    StandardWorkspace defaultWorkspace = PERSISTENCE
-        .getConfig(ConfigSchema.STANDARD_WORKSPACE, PersistenceConstants.DEFAULT_WORKSPACE_ID.toString(), StandardWorkspace.class);
-    assertEquals(PersistenceConstants.DEFAULT_WORKSPACE_ID, defaultWorkspace.getWorkspaceId());
-    assertEquals("default", defaultWorkspace.getName());
-    assertEquals("default", defaultWorkspace.getSlug());
-    assertEquals(false, defaultWorkspace.getInitialSetupComplete());
-    assertEquals(true, defaultWorkspace.getDisplaySetupWizard());
-    assertEquals(false, defaultWorkspace.getTombstone());
-
     // source
     String mySqlSourceId = "435bb9a5-7887-4809-aa58-28c27df0d7ad";
     StandardSourceDefinition mysqlSource = PERSISTENCE
@@ -103,7 +93,7 @@ public class YamlSeedConfigPersistenceTest {
 
   @Test
   public void testWriteMethods() {
-    assertThrows(UnsupportedOperationException.class, () -> PERSISTENCE.writeConfig(ConfigSchema.STANDARD_WORKSPACE, "id", new Object()));
+    assertThrows(UnsupportedOperationException.class, () -> PERSISTENCE.writeConfig(ConfigSchema.STANDARD_SOURCE_DEFINITION, "id", new Object()));
     assertThrows(UnsupportedOperationException.class, () -> PERSISTENCE.replaceAllConfigs(Collections.emptyMap(), false));
   }
 
