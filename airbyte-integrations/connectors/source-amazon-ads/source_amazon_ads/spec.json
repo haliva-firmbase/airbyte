@@ -1,0 +1,30 @@
+{
+  "documentationUrl": "https://docs.airbyte.io/integrations/sources/amazon-ads",
+  "connectionSpecification": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Amazon Ads Spec",
+    "type": "object",
+    "required": ["client_id", "client_secret", "scope", "refresh_token"],
+    "additionalProperties": false,
+    "properties": {
+      "client_id": {
+        "type": "string",
+        "description": "Oauth client id <a href=\"https://advertising.amazon.com/API/docs/en-us/setting-up/step-1-create-lwa-app\">How to create your Login with Amazon</a>"
+      },
+      "client_secret": {
+        "type": "string",
+        "description": "Oauth client secret <a href=\"https://advertising.amazon.com/API/docs/en-us/setting-up/step-1-create-lwa-app\">How to create your Login with Amazon</a>",
+        "airbyte_secret": true
+      },
+      "scope": {
+        "type": "string",
+        "description": "Usually its advertising::campaign_management, but customers may need to set scope to cpc_advertising:campaign_management"
+      },
+      "refresh_token": {
+        "type": "string",
+        "description": "Oauth 2.0 refresh_token, <a href=\"https://developer.amazon.com/docs/login-with-amazon/conceptual-overview.html\">read details here</a>",
+        "airbyte_secret": true
+      }
+    }
+  }
+}
