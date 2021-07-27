@@ -31,31 +31,24 @@ import static org.mockito.Mockito.when;
 
 import io.airbyte.api.model.HealthCheckRead;
 import io.airbyte.config.StandardWorkspace;
-import io.airbyte.config.persistence.ConfigNotFoundException;
 import io.airbyte.config.persistence.ConfigRepository;
 import io.airbyte.validation.json.JsonValidationException;
 import java.io.IOException;
-import java.util.UUID;
+import java.util.Collections;
 import org.junit.jupiter.api.Test;
 
 class HealthCheckHandlerTest {
 
-  private static final UUID WORKSPACE_ID = UUID.randomUUID();
-
   @Test
-  void testDbHealth() throws ConfigNotFoundException, IOException, JsonValidationException {
+  void testDbHealth() throws IOException, JsonValidationException {
     final ConfigRepository configRepository = mock(ConfigRepository.class);
     final HealthCheckHandler healthCheckHandler = new HealthCheckHandler(configRepository);
 
     // check db healthy
-    when(configRepository.getStandardWorkspace(WORKSPACE_ID, true)).thenReturn(new StandardWorkspace());
+    when(configRepository.listStandardWorkspaces(true)).thenReturn(Collections.singletonList(new StandardWorkspace()));
     assertEquals(new HealthCheckRead().db(true), healthCheckHandler.health());
 
-    // check db unhealthy
-    when(configRepository.getStandardWorkspace(WORKSPACE_ID, true)).thenReturn(null);
-    assertEquals(new HealthCheckRead().db(false), healthCheckHandler.health());
-
-    doThrow(IOException.class).when(configRepository).getStandardWorkspace(WORKSPACE_ID, false);
+    doThrow(IOException.class).when(configRepository).listStandardWorkspaces(true);
     assertEquals(new HealthCheckRead().db(false), healthCheckHandler.health());
   }
 
