@@ -138,7 +138,7 @@ class SegmentTrackingClientTest {
         "email", EMAIL,
         "airbyte_version", AIRBYTE_VERSION);
 
-    segmentTrackingClient.track(WORKSPACE_ID,"jump", metadata);
+    segmentTrackingClient.track(WORKSPACE_ID, "jump", metadata);
 
     verify(analytics).enqueue(mockBuilder.capture());
     final TrackMessage actual = mockBuilder.getValue().build();

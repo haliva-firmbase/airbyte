@@ -95,7 +95,8 @@ public class TrackingClientSingleton {
     }
   }
 
-  // todo (cgardens) - trackingIdentityFetcher should probably have some sort of caching where it is only re-fetched on identify or alias.
+  // todo (cgardens) - trackingIdentityFetcher should probably have some sort of caching where it is
+  // only re-fetched on identify or alias.
   /**
    * Creates a tracking client that uses the appropriate strategy from an identity supplier.
    *
@@ -103,7 +104,9 @@ public class TrackingClientSingleton {
    * @param deployment - deployment tracking info. static because it should not change once the
    *        instance is running.
    * @param airbyteRole
-   * @param trackingIdentityFetcher - how we get the identity of the user. we have a function that takes in workspaceId and returns the tracking identity. it does not have any caching as email or other fields on the identity can change over time.
+   * @param trackingIdentityFetcher - how we get the identity of the user. we have a function that
+   *        takes in workspaceId and returns the tracking identity. it does not have any caching as
+   *        email or other fields on the identity can change over time.
    * @return tracking client
    */
   @VisibleForTesting

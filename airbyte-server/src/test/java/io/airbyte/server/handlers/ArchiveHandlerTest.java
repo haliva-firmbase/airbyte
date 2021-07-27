@@ -30,7 +30,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import io.airbyte.analytics.TrackingClient;
 import io.airbyte.api.model.ImportRead;
 import io.airbyte.api.model.ImportRead.StatusEnum;
 import io.airbyte.commons.io.FileTtlManager;
@@ -58,7 +57,6 @@ public class ArchiveHandlerTest {
   private FileTtlManager fileTtlManager;
   private ConfigDumpExporter configDumpExporter;
   private ConfigDumpImporter configDumpImporter;
-  private TrackingClient trackingClient;
 
   @BeforeEach
   void setUp() {
@@ -66,14 +64,12 @@ public class ArchiveHandlerTest {
     fileTtlManager = mock(FileTtlManager.class);
     configDumpExporter = mock(ConfigDumpExporter.class);
     configDumpImporter = mock(ConfigDumpImporter.class);
-    trackingClient = mock(TrackingClient.class);
     archiveHandler = new ArchiveHandler(
         VERSION,
         configRepository,
         fileTtlManager,
         configDumpExporter,
-        configDumpImporter,
-        trackingClient);
+        configDumpImporter);
   }
 
   @Test
@@ -99,7 +95,6 @@ public class ArchiveHandlerTest {
     // make sure it cleans up the file.
     assertFalse(Files.exists(file.toPath()));
 
-    verify(trackingClient).identify();
     verify(configDumpImporter).importData(VERSION, file);
   }
 

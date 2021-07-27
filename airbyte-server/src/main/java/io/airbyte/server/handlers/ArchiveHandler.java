@@ -25,8 +25,6 @@
 package io.airbyte.server.handlers;
 
 import com.google.common.annotations.VisibleForTesting;
-import io.airbyte.analytics.TrackingClient;
-import io.airbyte.analytics.TrackingClientSingleton;
 import io.airbyte.api.model.ImportRead;
 import io.airbyte.api.model.ImportRead.StatusEnum;
 import io.airbyte.commons.io.FileTtlManager;
@@ -53,7 +51,6 @@ public class ArchiveHandler {
   private final ConfigDumpExporter configDumpExporter;
   private final ConfigDumpImporter configDumpImporter;
   private final FileTtlManager fileTtlManager;
-  private final TrackingClient trackingClient;
 
   public ArchiveHandler(final String version,
                         final ConfigRepository configRepository,
@@ -64,8 +61,7 @@ public class ArchiveHandler {
         configRepository,
         fileTtlManager,
         new ConfigDumpExporter(configRepository, jobPersistence),
-        new ConfigDumpImporter(configRepository, jobPersistence),
-        TrackingClientSingleton.get());
+        new ConfigDumpImporter(configRepository, jobPersistence));
   }
 
   @VisibleForTesting
@@ -73,14 +69,12 @@ public class ArchiveHandler {
                  final ConfigRepository configRepository,
                  final FileTtlManager fileTtlManager,
                  final ConfigDumpExporter configDumpExporter,
-                 final ConfigDumpImporter configDumpImporter,
-                 final TrackingClient trackingClient) {
+                 final ConfigDumpImporter configDumpImporter) {
     this.version = version;
     this.configRepository = configRepository;
     this.configDumpExporter = configDumpExporter;
     this.configDumpImporter = configDumpImporter;
     this.fileTtlManager = fileTtlManager;
-    this.trackingClient = trackingClient;
   }
 
   /**

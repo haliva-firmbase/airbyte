@@ -101,8 +101,10 @@ class TrackingClientSingletonTest {
     when(configRepository.getStandardWorkspace(workspace1.getWorkspaceId(), true)).thenReturn(workspace1);
     when(configRepository.getStandardWorkspace(workspace2.getWorkspaceId(), true)).thenReturn(workspace2);
 
-    final TrackingIdentity workspace1Actual = TrackingClientSingleton.getTrackingIdentity(configRepository, AIRBYTE_VERSION, workspace1.getWorkspaceId());
-    final TrackingIdentity workspace2Actual = TrackingClientSingleton.getTrackingIdentity(configRepository, AIRBYTE_VERSION, workspace2.getWorkspaceId());
+    final TrackingIdentity workspace1Actual =
+        TrackingClientSingleton.getTrackingIdentity(configRepository, AIRBYTE_VERSION, workspace1.getWorkspaceId());
+    final TrackingIdentity workspace2Actual =
+        TrackingClientSingleton.getTrackingIdentity(configRepository, AIRBYTE_VERSION, workspace2.getWorkspaceId());
     final TrackingIdentity workspace1Expected = new TrackingIdentity(AIRBYTE_VERSION, workspace1.getCustomerId(), null, null, null, null);
     final TrackingIdentity workspace2Expected = new TrackingIdentity(AIRBYTE_VERSION, workspace2.getCustomerId(), null, null, null, null);
 
